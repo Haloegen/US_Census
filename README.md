@@ -13,3 +13,9 @@ So next what I will do is find the top 5 insurance charges and the bottom 5 and 
 the assumption was that the range would show us something but the values of the top 5 are relatively close together, 
 we shall expand to the top 10 and the bottom 10 to see if that changes anything
 this also proved unhelpful.
+
+Using Interquartile ranges and standard deviation I have found that the variability in the insurance charges is high, with their being 11,899 dollars between the 25th percentile and 75th percentile. Which in turn suggests that although the average is around 13,270 the individuals involved in the data set can vary greatly from the mean.
+
+The standard deviation being 12,110 meands that the possibility of higher or lower insurance costs skewing the data is incredibly likely.
+
+Using this information we can make an assumption that the information we have could be skewed in either direction, i'm leaning towards slightly right skewed with the highest insurance charges being over 6 times the lowest.

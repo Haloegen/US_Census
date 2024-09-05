@@ -1,5 +1,7 @@
 import sqlite3
 import csv
+import numpy as np 
+import statistics
 
 # # Connect to the database (or create it if it doesn't exist)
 # conn = sqlite3.connect('US.db')
@@ -163,4 +165,31 @@ def find_top_charges():
 # [(63770.42801,), (62592.87309,), (60021.39897,), (58571.07448,), (55135.40209,)] biggest charges
 # [(1121.8739,), (1131.5066,), (1135.9407,), (1136.3994,), (1137.011,)] lowest charges
 
+
+def get_all_charges():
+    query = "SELECT charges FROM US_CENSUS WHERE charges IS NOT NULL"
+    result = query_census_data(query)
+
+    charges = [row[0] for row in result]
+    return charges
+
+def calculate_iqr_and_std():
+    charges = get_all_charges()
+    
+    if len(charges) == 0:
+        print("No data available")
+        return None, None
+
+    q75, q25 = np.percentile(charges, [75,25])
+    iqr = q75 - q25
+
+    std_dev = statistics.stdev(charges)
+
+    print(f"Interquartile Range (IQR): {iqr}")
+    print(f"Standard Deviation: {std_dev}")
+    
+    return iqr, std_dev
+
+# IQR = 11899.63
+# STD_DEV = 12110.01
 
