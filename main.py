@@ -59,6 +59,7 @@ def collect_data():
     count = data[0][0]
     # print(count)
     return count
+# 1338 entries in the data
 
 def calculate_average_charge():
     query = "SELECT AVG(charges) FROM US_CENSUS WHERE charges IS NOT NULL"
@@ -70,6 +71,7 @@ def calculate_average_charge():
     
     # print(avg_charge)
     return avg_charge
+# 13270.42 is the average insurance charge
 
 
 
@@ -80,6 +82,7 @@ def calculate_sum_charges():
     if sum_charge is not None:
         sum_charge = round(sum_charge, 2)
     return sum_charge
+# total of all the insurance charges in the data set 17755824.99
 
 average_charge = calculate_average_charge()
 
@@ -92,12 +95,64 @@ def count_non_smokers():
     total_non_smokers = result[0][0]
     # print(total_non_smokers)
     return total_non_smokers
+# 1064 non smokers
 
 def count_smokers():
     query = "SELECT COUNT(*) FROM US_CENSUS WHERE LOWER(smoker) = 'yes'"
     result = query_census_data(query)
     total_smokers = result[0][0]
-    print(total_smokers)
+    # print(total_smokers)
     return total_smokers
+# 274 smokers
 
-smokers = count_smokers()
+def count_people_with_children():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children > 0"
+    result = query_census_data(query)
+    total_people_with_children = result[0][0]
+    # print(total_people_with_children)
+    return total_people_with_children
+# 764 people with children
+
+def count_people_without_children():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children = 0"
+    result = query_census_data(query)
+    people_without_children = result[0][0]
+    # print(people_without_children)
+    return(people_without_children)
+# 574 people have no children
+
+def count_people_with_children_and_dont_smoke():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children > 0 AND LOWER(smoker) = 'no'"
+    result = query_census_data(query)
+    people_with_children_and_dont_smoke = result[0][0]
+    # print(people_with_children_and_dont_smoke)
+    return people_with_children_and_dont_smoke
+# 605 people who dont smoke and have a child
+
+def count_people_who_dont_have_kids_but_smoke():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children = 0 AND LOWER(smoker) = 'yes'"
+    result = query_census_data(query)
+    people_who_dont_have_kids_but_smoke = result[0][0]
+    # print(people_who_dont_have_kids_but_smoke)
+    return people_who_dont_have_kids_but_smoke
+# 115 people who dont have kids but smoke
+# by deduction the remainder should be 618 people
+
+def count_people_who_smoke_and_have_kids():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children > 0 AND LOWER(smoker) = 'yes'"
+    result = query_census_data(query)
+    people_who_smoke_and_have_kids = result[0][0]
+    # print(people_who_smoke_and_have_kids)
+    return people_who_smoke_and_have_kids
+# 159 people who smoke and have kids
+# 459 people who dont have kids and dont smoke should be the remainder
+
+def count_people_dont_smoke_no_kids():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE children = 0 AND LOWER(smoker) = 'no'"
+    result = query_census_data(query)
+    people_dont_smoke_no_kids = result[0][0]
+    # print(people_dont_smoke_no_kids)
+    return people_dont_smoke_no_kids
+#459 is the remainder which means the math adds up
+
+
