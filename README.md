@@ -1,2 +1,2 @@
 So the main goal of this project is to design an api, that can write to an sql server and also query the data using pyton methodology.
-Later on I will use react, and bootstrap to display the data on the website and use search functionality to allow users to show the data.
+
