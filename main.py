@@ -160,7 +160,7 @@ def count_people_dont_smoke_no_kids():
 def find_top_charges():
     query = "SELECT charges FROM US_CENSUS ORDER BY charges DESC limit 10"
     result = query_census_data(query)
-    print(result)
+    # print(result)
     return(result)
 # [(63770.42801,), (62592.87309,), (60021.39897,), (58571.07448,), (55135.40209,)] biggest charges
 # [(1121.8739,), (1131.5066,), (1135.9407,), (1136.3994,), (1137.011,)] lowest charges
@@ -183,13 +183,37 @@ def calculate_iqr_and_std():
     q75, q25 = np.percentile(charges, [75,25])
     iqr = q75 - q25
 
-    std_dev = statistics.stdev(charges)
-
-    print(f"Interquartile Range (IQR): {iqr}")
-    print(f"Standard Deviation: {std_dev}")
-    
+    std_dev = statistics.stdev(charges)   
     return iqr, std_dev
 
 # IQR = 11899.63
 # STD_DEV = 12110.01
+
+def average_charge_smokers_no_kids():
+    # Query to calculate average charge for people who smoke and have no children
+    query = "SELECT AVG(charges) FROM US_CENSUS WHERE LOWER(smoker) = 'yes' AND children = 0"
+    result = query_census_data(query)
+    
+    avg_charge_smokers_no_kids = result[0][0]
+    
+    # Check for None (in case no data is found)
+    if avg_charge_smokers_no_kids is not None:
+        avg_charge_smokers_no_kids = round(avg_charge_smokers_no_kids, 2)
+    
+    print(f"Average charge for smokers with no children: {avg_charge_smokers_no_kids}")
+    return avg_charge_smokers_no_kids
+
+def average_charge_non_smokers_with_kids():
+    # Query to calculate average charge for people who don't smoke and have children
+    query = "SELECT AVG(charges) FROM US_CENSUS WHERE LOWER(smoker) = 'no' AND children > 0"
+    result = query_census_data(query)
+    
+    avg_charge_non_smokers_with_kids = result[0][0]
+    
+    # Check for None (in case no data is found)
+    if avg_charge_non_smokers_with_kids is not None:
+        avg_charge_non_smokers_with_kids = round(avg_charge_non_smokers_with_kids, 2)
+    
+    print(f"Average charge for non-smokers with children: {avg_charge_non_smokers_with_kids}")
+    return avg_charge_non_smokers_with_kids
 

@@ -1,21 +1,86 @@
-Using the us census data the goal of this project is to first make a hypothesis and see if that hypothesis is correct
+# US Census Insurance Data Analysis
 
-Using sql and python I have begun sorting out the total numbers of people who have children, and who smoke, as the main hypothesis of this is to find out if smokers pay more in insurance then those with children.
+This project analyzes insurance data from the US census, focusing on whether smokers pay more in insurance than non-smokers with children. Using SQL and Python, we sort and query data related to smokers, non-smokers, individuals with children, and individuals without children to test our hypothesis.
 
-I have counted the total amounts of smokers with children, without children, non smokers with children and non smokers no children to see what percentage of the total pool is made up
+## Hypothesis
 
-The total amount of people/entries in the census is 1338. 
-The average charge for insurance is 13270.42 dollars. 
-Averages being non robust stats means that a small percentage of incredibly small insurance charges or on the other end incredibly large insurance charges could skew the average.
+The goal of this project is to determine whether **smokers pay more in insurance than individuals with children**.
 
-So next what I will do is find the top 5 insurance charges and the bottom 5 and calculate the range of their averages to see if this is truly the case
+## Data Overview
 
-the assumption was that the range would show us something but the values of the top 5 are relatively close together, 
-we shall expand to the top 10 and the bottom 10 to see if that changes anything
-this also proved unhelpful.
+- **Total entries in the dataset**: 1338
+- **Average insurance charge**: \$13,270.42
 
-Using Interquartile ranges and standard deviation I have found that the variability in the insurance charges is high, with their being 11,899 dollars between the 25th percentile and 75th percentile. Which in turn suggests that although the average is around 13,270 the individuals involved in the data set can vary greatly from the mean.
+### Caveat: Skewed Averages
 
-The standard deviation being 12,110 meands that the possibility of higher or lower insurance costs skewing the data is incredibly likely.
+While the average charge is \$13,270.42, averages are non-robust statistics, meaning that extremely low or high insurance charges could skew the average. To explore this further, I examined the top and bottom insurance charges.
 
-Using this information we can make an assumption that the information we have could be skewed in either direction, i'm leaning towards slightly right skewed with the highest insurance charges being over 6 times the lowest.
+```python
+# Find the top 10 and bottom 10 insurance charges
+def find_top_charges():
+    query = "SELECT charges FROM US_CENSUS ORDER BY charges DESC LIMIT 10"
+    return query_census_data(query)
+```
+``` python
+def find_bottom_charges():
+    query = "SELECT charges FROM US_CENSUS ORDER BY charges ASC LIMIT 10"
+    return query_census_data(query)
+```
+Top and Bottom Insurance Charges
+The top 5 insurance charges are relatively close together, leading to an expanded range of the top and bottom 10 charges, which still proved unhelpful in understanding the skewness. Therefore, we explored more robust statistics like the interquartile range and standard deviation.
+
+Variability in Insurance Charges
+Using interquartile range (IQR) and standard deviation (STD), I found that the variability in insurance charges is high. This suggests that although the average is $13,270, individuals' charges vary significantly from the mean.
+
+Interquartile Range (IQR): $11,899
+Standard Deviation (STD): $12,110
+
+```python
+def calculate_iqr_and_std():
+    charges = get_all_charges()
+    q75, q25 = np.percentile(charges, [75, 25])
+    iqr = q75 - q25
+    std_dev = statistics.stdev(charges)
+    return iqr, std_dev
+```
+
+Conclusion
+The average charge for smokers is much higher than for those with children, despite smokers (274) being a smaller group than individuals with children (764). The analysis shows:
+
+Average insurance cost for smokers: $30,000+
+Average insurance cost for non-smoking parents: $9,000+
+## Further Exploration
+If we extended the analysis, we could examine whether age and BMI also contribute to the higher insurance charges for smokers. However, based on the current scope of the project, the conclusion is that smoking is more expensive than having children in terms of insurance.
+
+This analysis does not account for additional factors like schooling costs for children but strictly focuses on insurance data.
+
+SQL Queries and Python Functions Used
+Below are some of the SQL queries and Python functions used to calculate various statistics in this project:
+
+``` python
+
+# Count non-smokers and smokers
+def count_non_smokers():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE LOWER(smoker) = 'no'"
+    return query_census_data(query)
+```
+```python
+def count_smokers():
+    query = "SELECT COUNT(*) FROM US_CENSUS WHERE LOWER(smoker) = 'yes'"
+    return query_census_data(query)
+```
+
+# Average charge for smokers with no children
+``` python
+def average_charge_smokers_no_kids():
+    query = "SELECT AVG(charges) FROM US_CENSUS WHERE LOWER(smoker) = 'yes' AND children = 0"
+    return query_census_data(query)
+```
+# Average charge for non-smokers with children
+``` python
+def average_charge_non_smokers_with_kids():
+    query = "SELECT AVG(charges) FROM US_CENSUS WHERE LOWER(smoker) = 'no' AND children > 0"
+    return query_census_data(query)
+
+```
+This project showcases the power of SQL and Python in analyzing real-world data to test a hypothesis about insurance charges for smokers and non-smokers with children.
