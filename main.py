@@ -155,4 +155,12 @@ def count_people_dont_smoke_no_kids():
     return people_dont_smoke_no_kids
 #459 is the remainder which means the math adds up
 
+def find_top_charges():
+    query = "SELECT charges FROM US_CENSUS ORDER BY charges DESC limit 10"
+    result = query_census_data(query)
+    print(result)
+    return(result)
+# [(63770.42801,), (62592.87309,), (60021.39897,), (58571.07448,), (55135.40209,)] biggest charges
+# [(1121.8739,), (1131.5066,), (1135.9407,), (1136.3994,), (1137.011,)] lowest charges
+
 
